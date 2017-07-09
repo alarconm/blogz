@@ -1,5 +1,7 @@
+from flask import Flask, request, redirect, render_template, session, flash
 from main import db, app
 from datetime import datetime
+import re
 
 
 class Blog(db.Model):
@@ -27,4 +29,37 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50))
     password = db.Column(db.String(50))
-    blogs = db.relationship('Blog', backref='owner')   
+    blogs = db.relationship('Blog', backref='owner')  
+
+    def __init__(self, username, password):
+        self.username = username
+        self.password = password 
+
+
+def validate_user(username, password, verify):
+    '''Validate username and password entered. Return specified failure if failed'''
+    existing_user = User.query.filter_by(username=username).first()
+
+    if existing_user:
+        flash('That username is already in use, choose another', 'error')
+        return 'error'
+   
+    if not username or not password or not verify:
+        flash('One or more fields are invalid', 'error')
+        return 'error'
+
+    if len(username) < 3 or len(username) > 20 or re.search(r'\s', username):
+        flash('Not a valid username, please enter a username without spaces at least 3 characters long but no longer than 20', 'error')
+        return 'error'
+
+    if len(password) >= 3 and len(password) <= 20:
+        if re.search(r'\s', password):
+            flash('Not a valid password, please enter a password between 3 and 20 characters long', 'error') 
+            return 'error'
+    else:
+        flash('Not a valid password, please enter a password between 3 and 20 characters long', 'error')
+        return 'error'
+    
+    if verify != password:
+        flash('Your passwords did not match', 'error')
+        return 'error'
