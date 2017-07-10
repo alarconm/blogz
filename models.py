@@ -27,7 +27,7 @@ class User(db.Model):
      keeps a relationship to the Blog class'''
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50))
+    username = db.Column(db.String(50), unique=True)
     password = db.Column(db.String(50))
     blogs = db.relationship('Blog', backref='owner')  
 

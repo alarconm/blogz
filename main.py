@@ -15,32 +15,14 @@ app.secret_key = 'dillybar'
 def require_login():
     '''Restrict and redirect user to signup or login if trying to post without being logged in.'''
 
-    allowed_routes = ['signup', 'login', 'blogpage', 'index']
+    allowed_routes = ['signup', 'login', 'blog', 'index']
     if request.endpoint not in allowed_routes and 'username' not in session:
         return redirect('/login')
 
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
-    '''Displays the home page. Receives post from newpost form and redirects to blog page if requirements are met'''
-    
-    if request.method == 'POST':
-        blog_title = request.form['blog_title']
-        blog_body = request.form['body']
-        blog_owner = request.form['username'] #TODO or is this ID? form needs work
-
-        # validate that a user entered a title or body, flash errors if not valid
-        if not blog_body or not blog_title:
-            if not blog_title:
-                flash('Please enter a title', 'error')
-            if not blog_body:
-                flash('Please enter content for your post', 'error')
-            return render_template('newpost.html', title="New Blog Post")
-
-        new_post = models.Blog(blog_title, blog_body, blog_owner)
-        db.session.add(new_post)
-        db.session.commit()
-        return render_template('blogpage.html', post=new_post)
+    '''Displays the home page.'''
 
     return render_template('index.html', title='Blog Home Page')
 
@@ -99,9 +81,28 @@ def logout():
     return redirect('/blog')
 
 
-@app.route('/newpost')
+@app.route('/newpost', methods=['POST', 'GET'])
 def add_post():
-    '''Display the new post template'''
+    '''Display the new post template. Receives post from
+     newpost form and redirects to blog page if requirements are met'''
+
+    if request.method == 'POST':
+        blog_title = request.form['blog_title']
+        blog_body = request.form['body']
+        owner = models.User.query.filter_by(username=session['username']).first()
+        # validate that a user entered a title or body, flash errors if not valid
+        if not blog_body or not blog_title:
+            if not blog_title:
+                flash('Please enter a title', 'error')
+            if not blog_body:
+                flash('Please enter content for your post', 'error')
+            return render_template('newpost.html', title="New Blog Post")
+
+        new_post = models.Blog(blog_title, blog_body, owner)
+        db.session.add(new_post)
+        db.session.commit() #TODO issue here - won't save outside of sessiona after 1 post. db relationship not working...
+        return render_template('blogpage.html', post=new_post)
+
 
     return render_template('newpost.html')
 
