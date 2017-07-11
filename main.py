@@ -1,14 +1,7 @@
 from flask import Flask, request, redirect, render_template, session, flash
 from flask_sqlalchemy import SQLAlchemy
 import re
-import models
-
-app = Flask(__name__)
-app.config['DEBUG'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://blogz:password@localhost:8889/blogz'
-app.config['SQLALCHEMY_ECHO'] = True
-db = SQLAlchemy(app)
-app.secret_key = 'dillybar'
+from models import User, Blog, validate_user, db, app
 
 
 @app.before_request
@@ -35,7 +28,7 @@ def login():
     if request.method == 'POST':
         password = request.form['password']
         username = request.form['username']
-        user = models.User.query.filter_by(username=username).first()
+        user = User.query.filter_by(username=username).first()
 
         if user and user.password == password:
             session['username'] = username
@@ -59,13 +52,13 @@ def signup():
         username = request.form['username']
         password = request.form['password']
         verify = request.form['verify']
-        existing_user = models.User.query.filter_by(username=username).first()
+        existing_user = User.query.filter_by(username=username).first()
 
-        if models.validate_user(username, password, verify):
+        if validate_user(username, password, verify):
             return render_template('signup.html', user_name=username)
 
         if not existing_user:
-            new_user = models.User(username, password)
+            new_user = User(username, password)
             db.session.add(new_user)
             db.session.commit()
             session['username'] = username
@@ -89,7 +82,7 @@ def add_post():
     if request.method == 'POST':
         blog_title = request.form['blog_title']
         blog_body = request.form['body']
-        owner = models.User.query.filter_by(username=session['username']).first()
+        owner = User.query.filter_by(username=session['username']).first()
         # validate that a user entered a title or body, flash errors if not valid
         if not blog_body or not blog_title:
             if not blog_title:
@@ -98,7 +91,7 @@ def add_post():
                 flash('Please enter content for your post', 'error')
             return render_template('newpost.html', title="New Blog Post")
 
-        new_post = models.Blog(blog_title, blog_body, owner)
+        new_post = Blog(blog_title, blog_body, owner)
         db.session.add(new_post)
         # current_db_sessions = db_session.object_session(s)
         # current_db_sessions.add(s)
@@ -112,11 +105,11 @@ def add_post():
 def blog_listings():
     '''Display all blogs in the database, or just a specific post if an ID is passed in the GET'''
 
-    posts = models.Blog.query.order_by(models.Blog.pub_date.desc()).all()
+    posts = Blog.query.order_by(Blog.pub_date.desc()).all()
 
     if request.args.get('id'):
         post_id = request.args.get('id')
-        post = models.Blog.query.filter_by(id=post_id).first()
+        post = Blog.query.filter_by(id=post_id).first()
         return render_template('blogpage.html', post=post)
 
     return render_template('blog.html', posts=posts)

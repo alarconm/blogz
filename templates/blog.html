@@ -11,6 +11,7 @@
             <h2><a href="/blog?id={{post.id}}">{{ post.title }}</a></h2>
             <em>{{ post.pub_date }}</em>
             <p>{{ post.body}}</p>
+            <p>{{ post.owner.username }}</p>
         </li>
         <hr />
         {% endfor %}
