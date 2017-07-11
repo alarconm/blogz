@@ -1,5 +1,6 @@
 from flask import Flask, request, redirect, render_template, session, flash
-from main import db, app
+from flask_sqlalchemy import SQLAlchemy
+from main import app, db
 from datetime import datetime
 import re
 

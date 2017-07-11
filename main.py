@@ -15,7 +15,7 @@ app.secret_key = 'dillybar'
 def require_login():
     '''Restrict and redirect user to signup or login if trying to post without being logged in.'''
 
-    allowed_routes = ['signup', 'login', 'blog', 'index']
+    allowed_routes = ['signup', 'login', 'blog_listings', 'index']
     if request.endpoint not in allowed_routes and 'username' not in session:
         return redirect('/login')
 
@@ -100,6 +100,8 @@ def add_post():
 
         new_post = models.Blog(blog_title, blog_body, owner)
         db.session.add(new_post)
+        # current_db_sessions = db_session.object_session(s)
+        # current_db_sessions.add(s)
         db.session.commit() #TODO issue here - won't save outside of sessiona after 1 post. db relationship not working...
         return render_template('blogpage.html', post=new_post)
 
