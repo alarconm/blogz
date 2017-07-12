@@ -3,9 +3,9 @@
 {% block content %}
 <div class='container-fluid'>
 <h3>{{ post.title }}</h3>
+<p><a href="/singleuser?id={{post.owner.id}}">{{ post.owner.username }}</a></p>
 <em>{{ post.pub_date }}</em>
 <p>{{ post.body }}</p>
-<p>{{ post.owner.username }}</p>
 </div>
 
 {% endblock %}

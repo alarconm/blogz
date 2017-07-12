@@ -1,6 +1,5 @@
 from flask import Flask, request, redirect, render_template, session, flash
 from flask_sqlalchemy import SQLAlchemy
-import re
 from models import User, Blog, validate_user, db, app
 
 
@@ -8,16 +7,18 @@ from models import User, Blog, validate_user, db, app
 def require_login():
     '''Restrict and redirect user to signup or login if trying to post without being logged in.'''
 
-    allowed_routes = ['signup', 'login', 'blog_listings', 'index']
+    allowed_routes = ['signup', 'login', 'blog_listings', 'index', 'singleuser']
     if request.endpoint not in allowed_routes and 'username' not in session:
         return redirect('/login')
 
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
-    '''Displays the home page.'''
+    '''Displays the home page as a list of authors'''
 
-    return render_template('index.html', title='Blog Home Page')
+    blog_authors = User.query.order_by(User.username).all()
+
+    return render_template('index.html', title='Blog Home Page', authors=blog_authors)
 
 
 @app.route('/login', methods=['POST', 'GET'])
@@ -93,13 +94,11 @@ def add_post():
 
         new_post = Blog(blog_title, blog_body, owner)
         db.session.add(new_post)
-        # current_db_sessions = db_session.object_session(s)
-        # current_db_sessions.add(s)
-        db.session.commit() #TODO issue here - won't save outside of sessiona after 1 post. db relationship not working...
+        db.session.commit()
         return render_template('blogpage.html', post=new_post)
 
-
     return render_template('newpost.html')
+
 
 @app.route('/blog')
 def blog_listings():
@@ -113,6 +112,16 @@ def blog_listings():
         return render_template('blogpage.html', post=post)
 
     return render_template('blog.html', posts=posts)
+
+
+@app.route('/singleuser')
+def singleuser():
+    '''Display all blog posts written by a specific author.'''
+
+    author_id = request.args.get('id')
+    posts = Blog.query.filter_by(owner_id=author_id).all()
+
+    return render_template('singleuser.html', posts=posts)
 
 
 if __name__ == '__main__':

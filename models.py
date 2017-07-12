@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, flash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import re
@@ -8,7 +8,6 @@ app.config['DEBUG'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://blogz:password@localhost:8889/blogz'
 app.config['SQLALCHEMY_ECHO'] = True
 app.secret_key = 'dillybar'
-
 db = SQLAlchemy(app)
 
 

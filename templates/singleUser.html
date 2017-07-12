@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% if posts|length == 0 %}
+    <p>No posts yet</p>
+    {% endif %}
+    <p>
+        <h3>{{ posts[0].owner.username }}</h3>
+        <ol>
+        {% for post in posts %}
+        <li>
+            <h2><a href="/blog?id={{post.id}}">{{ post.title }}</a></h2>
+            <em>{{ post.pub_date }}</em>
+        </li>
+        <hr />
+        {% endfor %}
+        </ol>
+    </p>
+ 
+{% endblock %}
