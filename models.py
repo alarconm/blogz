@@ -1,8 +1,15 @@
-from flask import Flask, request, redirect, render_template, session, flash
+from flask import Flask, flash
 from flask_sqlalchemy import SQLAlchemy
-from main import app, db
 from datetime import datetime
 import re
+from hashutils import make_pw_hash, check_pw_hash
+
+app = Flask(__name__)
+app.config['DEBUG'] = True
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://blogz:password@localhost:8889/blogz'
+app.config['SQLALCHEMY_ECHO'] = True
+app.secret_key = 'dillybar'
+db = SQLAlchemy(app)
 
 
 class Blog(db.Model):
@@ -29,12 +36,12 @@ class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True)
-    password = db.Column(db.String(50))
+    pw_hash = db.Column(db.String(256))
     blogs = db.relationship('Blog', backref='owner')  
 
     def __init__(self, username, password):
         self.username = username
-        self.password = password 
+        self.pw_hash = make_pw_hash(password)
 
 
 def validate_user(username, password, verify):

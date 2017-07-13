@@ -2,6 +2,16 @@
 
 {% block content %}
 
+    <h3>Authors</h3>
+    {% if authors|length == 0 %}
+        <h2>No blog authors yet</h2>
+    {% endif %}
+    
+    {% for author in authors %}
+    <li>
+        <p><a href="/singleuser?id={{author.id}}">{{ author.username }}</a></p>
+    </li>
+    {% endfor %}
 
 {% endblock %}
 

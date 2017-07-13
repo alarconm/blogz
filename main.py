@@ -1,30 +1,25 @@
 from flask import Flask, request, redirect, render_template, session, flash
 from flask_sqlalchemy import SQLAlchemy
-import re
-import models
-
-app = Flask(__name__)
-app.config['DEBUG'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://blogz:password@localhost:8889/blogz'
-app.config['SQLALCHEMY_ECHO'] = True
-db = SQLAlchemy(app)
-app.secret_key = 'dillybar'
+from models import User, Blog, validate_user, db, app
+from hashutils import check_pw_hash
 
 
 @app.before_request
 def require_login():
     '''Restrict and redirect user to signup or login if trying to post without being logged in.'''
 
-    allowed_routes = ['signup', 'login', 'blog_listings', 'index']
+    allowed_routes = ['signup', 'login', 'blog_listings', 'index', 'singleuser']
     if request.endpoint not in allowed_routes and 'username' not in session:
         return redirect('/login')
 
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
-    '''Displays the home page.'''
+    '''Displays the home page as a list of authors'''
 
-    return render_template('index.html', title='Blog Home Page')
+    blog_authors = User.query.order_by(User.username).all()
+
+    return render_template('index.html', title='Blog Home Page', authors=blog_authors)
 
 
 @app.route('/login', methods=['POST', 'GET'])
@@ -35,9 +30,9 @@ def login():
     if request.method == 'POST':
         password = request.form['password']
         username = request.form['username']
-        user = models.User.query.filter_by(username=username).first()
+        user = User.query.filter_by(username=username).first()
 
-        if user and user.password == password:
+        if user and check_pw_hash(password, user.pw_hash):
             session['username'] = username
             flash("Logged in")
             return redirect('/newpost')
@@ -59,13 +54,13 @@ def signup():
         username = request.form['username']
         password = request.form['password']
         verify = request.form['verify']
-        existing_user = models.User.query.filter_by(username=username).first()
+        existing_user = User.query.filter_by(username=username).first()
 
-        if models.validate_user(username, password, verify):
+        if validate_user(username, password, verify):
             return render_template('signup.html', user_name=username)
 
         if not existing_user:
-            new_user = models.User(username, password)
+            new_user = User(username, password)
             db.session.add(new_user)
             db.session.commit()
             session['username'] = username
@@ -74,7 +69,7 @@ def signup():
     return render_template('signup.html')
 
 
-@app.route('/logout')
+@app.route('/logout', methods=['GET', 'POST'])
 def logout():
     '''delete username from the session and redirect to the homepage'''
     del session['username']
@@ -89,7 +84,7 @@ def add_post():
     if request.method == 'POST':
         blog_title = request.form['blog_title']
         blog_body = request.form['body']
-        owner = models.User.query.filter_by(username=session['username']).first()
+        owner = User.query.filter_by(username=session['username']).first()
         # validate that a user entered a title or body, flash errors if not valid
         if not blog_body or not blog_title:
             if not blog_title:
@@ -98,28 +93,36 @@ def add_post():
                 flash('Please enter content for your post', 'error')
             return render_template('newpost.html', title="New Blog Post")
 
-        new_post = models.Blog(blog_title, blog_body, owner)
+        new_post = Blog(blog_title, blog_body, owner)
         db.session.add(new_post)
-        # current_db_sessions = db_session.object_session(s)
-        # current_db_sessions.add(s)
-        db.session.commit() #TODO issue here - won't save outside of sessiona after 1 post. db relationship not working...
+        db.session.commit()
         return render_template('blogpage.html', post=new_post)
 
-
     return render_template('newpost.html')
+
 
 @app.route('/blog')
 def blog_listings():
     '''Display all blogs in the database, or just a specific post if an ID is passed in the GET'''
 
-    posts = models.Blog.query.order_by(models.Blog.pub_date.desc()).all()
+    posts = Blog.query.order_by(Blog.pub_date.desc()).all()
 
     if request.args.get('id'):
         post_id = request.args.get('id')
-        post = models.Blog.query.filter_by(id=post_id).first()
+        post = Blog.query.filter_by(id=post_id).first()
         return render_template('blogpage.html', post=post)
 
     return render_template('blog.html', posts=posts)
+
+
+@app.route('/singleuser')
+def singleuser():
+    '''Display all blog posts written by a specific author.'''
+
+    author_id = request.args.get('id')
+    posts = Blog.query.filter_by(owner_id=author_id).all()
+
+    return render_template('singleuser.html', posts=posts)
 
 
 if __name__ == '__main__':
