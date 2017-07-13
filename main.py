@@ -1,6 +1,7 @@
 from flask import Flask, request, redirect, render_template, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from models import User, Blog, validate_user, db, app
+from hashutils import check_pw_hash
 
 
 @app.before_request
@@ -31,7 +32,7 @@ def login():
         username = request.form['username']
         user = User.query.filter_by(username=username).first()
 
-        if user and user.password == password:
+        if user and check_pw_hash(password, user.pw_hash):
             session['username'] = username
             flash("Logged in")
             return redirect('/newpost')
@@ -68,7 +69,7 @@ def signup():
     return render_template('signup.html')
 
 
-@app.route('/logout')
+@app.route('/logout', methods=['GET', 'POST'])
 def logout():
     '''delete username from the session and redirect to the homepage'''
     del session['username']

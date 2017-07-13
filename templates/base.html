@@ -14,9 +14,19 @@
         <a href="/">Home</a>
         <a href="/blog">Blog Listings</a>
         <a href="/newpost">Add blog post</a>
-        <a href="/login">Log in</a>
+        <div style='float: right'>
+        {% if 'username' in session %}
+            {{ session['username'] }}
+            <form action="/logout" method="post">
+                <input type="submit" value="Log Out" />
+            </form>
+        {% else %}
+            <a href="/login">login</a> | <a href="/signup">Signup</a>
+        {% endif %}
+        </div>
+        <!-- <a href="/login">Log in</a>
         <a href="/signup">Sign Up</a>
-        <a href="/logout">Log out</a>    
+        <a href="/logout">Log out</a>     -->
     </div>
 
     {% with messages = get_flashed_messages(with_categories=True) %}
