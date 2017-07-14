@@ -2,14 +2,17 @@
 
 {% block content %}
 
-    <h3>Authors</h3>
-    {% if authors|length == 0 %}
-        <h2>No blog authors yet</h2>
+    <h3>Recent Posts</h3>
+    {% if posts|length == 0 %}
+        <h2>No Posts yet...you should make one!</h2>
     {% endif %}
     
-    {% for author in authors %}
+    {% for post in posts %}
     <li>
-        <p><a href="/singleuser?id={{author.id}}">{{ author.username }}</a></p>
+        <p><a href="/singleuser?id={{post.owner.id}}">{{ post.owner.username }}</a></p>
+        <p><a href="/blog?id={{post.id}}">{{ post.title }}</a></p>
+        <p>{{ post.pub_date }}</p>
+
     </li>
     {% endfor %}
 
