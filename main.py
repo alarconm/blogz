@@ -41,7 +41,7 @@ def login():
             flash('username does not exist', 'error')
         else:
             flash('User password incorrect', 'error')
-    
+
     return render_template('login.html')
 
 

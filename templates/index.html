@@ -3,17 +3,20 @@
 {% block content %}
 
     <h3>Recent Posts</h3>
+    <hr />
     {% if posts|length == 0 %}
         <h2>No Posts yet...you should make one!</h2>
     {% endif %}
     
     {% for post in posts %}
+    <div class="well">
     <li>
         <p><a href="/singleuser?id={{post.owner.id}}">{{ post.owner.username }}</a></p>
         <p><a href="/blog?id={{post.id}}">{{ post.title }}</a></p>
         <p>{{ post.pub_date }}</p>
 
     </li>
+    </div>
     {% endfor %}
 
 {% endblock %}

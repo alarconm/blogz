@@ -10,30 +10,47 @@
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/mainpage.css') }}">    
     </head>
 <body>
-    <div>
-        <a href="/">Home</a>
-        <a href="/blog">Blog Listings</a>
-        <a href="/newpost">Add blog post</a>
-        <a href="/authors">Blog Authors</a>
-        <div style='float: right'>
-        {% if 'username' in session %}
-            {{ session['username'] }}
-            <form action="/logout" method="post">
-                <input type="submit" value="Log Out" />
-            </form>
-        {% else %}
-            <a href="/login">login</a> | <a href="/signup">Signup</a>
-        {% endif %}
-        </div>
-        <!-- <a href="/login">Log in</a>
-        <a href="/signup">Sign Up</a>
-        <a href="/logout">Log out</a>     -->
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/">Home</a>
     </div>
+
+    <ul class="nav navbar-nav">
+      <li><a href="/blog">Blog Listings</a></li>
+      <li><a href="/newpost">Add blog post</a></li>
+      <li><a href="/authors">Blog Authors</a></li>
+    </ul>
+
+    <ul class="nav navbar-nav navbar-right">
+        {% if 'username' in session %}
+            <li>{{session['username']}}</li>
+                <li><form action="/logout" method="post">
+                    <button class="btn btn-default navbar-btn"><input type="hidden" />Logout</button></form></li>
+        {% else %}
+            <li><a href="/signup"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+            <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+        {% endif %}
+    </ul>
+  </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <!--Left blank div Start  -->
+        <div class="col-sm-2">
+        </div>
+        <!--Left div end  -->
+        <!--Middle div start  -->
+        <div class="col-sm-8">
+
+
 
     {% with messages = get_flashed_messages(with_categories=True) %}
         <ul>
         {% for category,message in messages %}
-        <li class="{{category}}">{{message}}</li>
+            <li class="{{category}}">{{message}}</li>
         {% endfor %}
         </ul>
 
@@ -42,7 +59,17 @@
     {% block content %}
     {% endblock %}
 
-    <hr />
+
+    <!--Middle div end  -->
+    </div>
+    <!--Right blank div start  -->
+    <div class="col-sm-2">
+    <!--Rigth div end  -->
+    </div>
+    </div>
+</div>
+
+
 
 </body>
 </html>

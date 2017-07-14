@@ -2,10 +2,12 @@
 
 {% block content %}
     {% if posts|length == 0 %}
-    <p>No posts yet</p>
+    <h3>No posts yet</h3>
+    <hr />
     {% endif %}
     <p>
         <h3>{{ posts[0].owner.username }}</h3>
+        <hr />
         <ol>
         {% for post in posts %}
         <li>
