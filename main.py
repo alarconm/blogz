@@ -105,12 +105,16 @@ def add_post():
 def blog_listings():
     '''Display all blogs in the database, or just a specific post if an ID is passed in the GET'''
 
-    posts = Blog.query.order_by(Blog.pub_date.desc()).all()
-
     if request.args.get('id'):
         post_id = request.args.get('id')
         post = Blog.query.filter_by(id=post_id).first()
         return render_template('blogpage.html', post=post)
+
+    # Pagination
+    post = 1 #Initializes the home page to the first page of pagination
+    if request.args.get('post'): #catches which page to move to in pagination
+        post = int(request.args.get('post'))
+    posts = Blog.query.order_by(Blog.pub_date.desc()).paginate(post, 4, error_out=True)
 
     return render_template('blog.html', posts=posts)
 
