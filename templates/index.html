@@ -7,17 +7,21 @@
     {% if posts|length == 0 %}
         <h2>No Posts yet...you should make one!</h2>
     {% endif %}
-    
-    {% for post in posts %}
-    <div class="well">
-    <li>
-        <p><a href="/singleuser?id={{post.owner.id}}">{{ post.owner.username }}</a></p>
-        <p><a href="/blog?id={{post.id}}">{{ post.title }}</a></p>
-        <p>{{ post.pub_date }}</p>
 
-    </li>
-    </div>
-    {% endfor %}
+
+        <ol>
+        {% for post in posts %}
+        <li>
+            <h2><a href="/blog?id={{post.id}}">{{ post.title }}</a></h2> <span class="right"><em>{{ post.pub_date }}</em></span>
+            <p>Posted by:<button class="btn btn-danger btn-xs"><a href="/singleuser?id={{post.owner.id}}">{{ post.owner.username }}</a></button></p>
+            <p>{{ post.body | truncate(500)}}</p>
+        </li>
+        <hr />
+        {% endfor %}
+        </ol>
+    
+
+
 
 {% endblock %}
 

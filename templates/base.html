@@ -25,7 +25,8 @@
 
     <ul class="nav navbar-nav navbar-right">
         {% if 'username' in session %}
-            <li>{{session['username']}}</li>
+<!--Figure out how to style the username -->
+             <li>{{session['username']}}</li>  
                 <li><form action="/logout" method="post">
                     <button class="btn btn-default navbar-btn"><input type="hidden" />Logout</button></form></li>
         {% else %}
@@ -39,11 +40,11 @@
 <div class="container-fluid">
     <div class="row">
         <!--Left blank div Start  -->
-        <div class="col-sm-2">
+        <div class="col-sm-3">
         </div>
         <!--Left div end  -->
         <!--Middle div start  -->
-        <div class="col-sm-8">
+        <div class="col-sm-6">
 
 
 
@@ -63,7 +64,7 @@
     <!--Middle div end  -->
     </div>
     <!--Right blank div start  -->
-    <div class="col-sm-2">
+    <div class="col-sm-3">
     <!--Rigth div end  -->
     </div>
     </div>
