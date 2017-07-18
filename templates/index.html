@@ -13,7 +13,7 @@
         {% for post in posts %}
         <li>
             <h2><a href="/blog?id={{post.id}}">{{ post.title }}</a></h2> <span class="right"><em>{{ post.pub_date }}</em></span>
-            <p>Posted by:<button class="btn btn-danger btn-xs"><a href="/singleuser?id={{post.owner.id}}">{{ post.owner.username }}</a></button></p>
+            <p>Posted by:<button class="btn btn-default btn-xs"><a href="/singleuser?id={{post.owner.id}}">{{ post.owner.username }}</a></button></p>
             <p>{{ post.body | truncate(500)}}</p>
         </li>
         <hr />

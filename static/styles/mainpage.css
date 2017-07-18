@@ -1,3 +1,4 @@
+
 .error {
     color: red;
 }
@@ -15,4 +16,9 @@ h3 {
 
 .right {
     text-align: right;
+}
+
+.success {
+    font-size: 2rem;
+    color: green;
 }

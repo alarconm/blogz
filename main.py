@@ -34,7 +34,7 @@ def login():
 
         if user and check_pw_hash(password, user.pw_hash):
             session['username'] = username
-            flash("Logged in")
+            flash('You are now successfully logged in', 'success')
             return redirect('/newpost')
 
         if not user:
