@@ -7,8 +7,9 @@ from hashutils import make_pw_hash, check_pw_hash
 app = Flask(__name__)
 app.config['DEBUG'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://blogz:password@localhost:8889/blogz'
-app.config['SQLALCHEMY_ECHO'] = False
+app.config['SQLALCHEMY_ECHO'] = True
 app.secret_key = 'dillybar'
+
 db = SQLAlchemy(app)
 
 
@@ -26,7 +27,7 @@ class Blog(db.Model):
         self.title = title
         self.body = body
         if pub_date is None:
-            pub_date = datetime.utcnow()
+            pub_date = datetime.now()
         self.pub_date = pub_date
         self.owner = owner
 
