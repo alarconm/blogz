@@ -123,7 +123,16 @@ def blog_listings():
 def singleuser():
     '''Display all blog posts written by a specific author.'''
 
-    author_id = request.args.get('id')
+    ####### username comes from the navbar when a user is signed in
+    username = request.args.get('username') 
+    if username:
+        user = User.query.filter_by(username=username).first()
+        author_id = user.id
+        posts = Blog.query.filter_by(owner_id=author_id).all()
+        return render_template('singleuser.html', posts=posts)
+    ####### end of navbar author navigation
+        
+    author_id = request.args.get('id') # all "author" links pass this in
     posts = Blog.query.filter_by(owner_id=author_id).all()
 
     return render_template('singleuser.html', posts=posts)

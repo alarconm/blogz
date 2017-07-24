@@ -11,8 +11,8 @@
         {% for post in posts.items %}
         <li>
             <h2><a href="/blog?id={{post.id}}">{{ post.title }}</a></h2>
-            <p><a href="/singleuser?id={{post.owner.id}}"><button class="btn btn-default btn-lg">{{ post.owner.username }}</button></a></p>
             <em>{{ post.pub_date }}</em>
+            <p>Posted by: <a href="/singleuser?id={{post.owner.id}}"><button class="btn btn-default">{{ post.owner.username }}</button></a></p>
             <p>{{ post.body | truncate(500)}}</p>
         </li>
         <hr />

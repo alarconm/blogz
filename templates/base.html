@@ -28,9 +28,8 @@
     <ul class="nav navbar-nav navbar-right">
         {% if 'username' in session %}
 <!--Figure out how to style the username -->
-             <li>{{session['username']}}</li> 
-                <li><form action="/logout" method="post">
-                    <button class="btn btn-default navbar-btn"><input type="hidden" />Logout</button></form></li>
+             <li><a href="/singleuser?username={{session['username']}}"><span class="glyphicon glyphicon-user"></span> Hello, {{session['username']}}</a></li>
+             <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span>Log out</a></li>
         {% else %}
             <li><a href="/signup"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
             <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
