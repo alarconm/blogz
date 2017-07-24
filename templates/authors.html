@@ -9,7 +9,7 @@
     {% endif %}
     
     {% for author in authors %}
-        <h2><a href="/singleuser?id={{author.id}}">{{ author.username }}</a><h2>
+        <h2><a href="/singleuser?id={{author.id}}"><button class="btn btn-primary btn-lg">{{ author.username }}</button></a><h2>
     <hr />
     {% endfor %}
 

@@ -4,7 +4,7 @@
 <div class='container-fluid'>
 <h3>{{ post.title }}</h3>
 <hr />
-<p><a href="/singleuser?id={{post.owner.id}}">{{ post.owner.username }}</a></p>
+<p><a href="/singleuser?id={{post.owner.id}}"><button class="btn btn-default btn-lg">{{ post.owner.username }}</button></a></p>
 <em>{{ post.pub_date }}</em>
 <p>{{ post.body }}</p>
 </div>
