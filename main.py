@@ -8,7 +8,7 @@ from hashutils import check_pw_hash
 def require_login():
     '''Restrict and redirect user to signup or login if trying to post without being logged in.'''
 
-    allowed_routes = ['signup', 'login', 'blog_listings', 'index', 'singleuser', 'authors']
+    allowed_routes = ['signup', 'login', 'blog_listings', 'index', 'singleuser', 'authors', 'static']
     if request.endpoint not in allowed_routes and 'username' not in session:
         return redirect('/login')
 
@@ -69,7 +69,7 @@ def signup():
     return render_template('signup.html')
 
 
-@app.route('/logout', methods=['GET', 'POST'])
+@app.route('/logout')
 def logout():
     '''delete username from the session and redirect to the homepage'''
     del session['username']
