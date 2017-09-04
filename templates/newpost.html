@@ -4,16 +4,20 @@
 <div class='center'>        
     <h3>Add a new post</h3>
     <hr />
+
     <form action='/newpost' method="post">
+        <div class="form-group">
         <label for="blog_title">Post Title:</label>
-        <p>
-        <input type="text" name='blog_title' />
-        </p>
+        <input class="form-control" type="text" name='blog_title' />
+        </div>
+
+        <div class="form-group">
         <label for="body">Post Content:</label>
-        <p> 
-        <textarea name="body" cols="40" rows="15"></textarea>
-        </p>
-        <input type="submit" value="New Post" />
+        <textarea class="form-control" name="body" cols="40" rows="15"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-default" value="New Post">Submit New Post</button>
+
     </form>
 </div>
 {% endblock %}

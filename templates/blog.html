@@ -6,6 +6,7 @@
     {% if posts.items|length == 0 %}
     <p>No posts yet</p>
     {% endif %}
+    
     <p>
         <ol>
         {% for post in posts.items %}
@@ -19,6 +20,7 @@
         {% endfor %}
         </ol>
     </p>
+
 <!--Pagination  -->
 {% if posts.has_prev %}
     <a href="/blog?post={{posts.prev_num}}">&lt;&lt; Newer posts</a>

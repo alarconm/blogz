@@ -4,31 +4,23 @@
 <hr />
 <div>
     <form action='/signup' method="post">
-         <table> 
+
+    <div class="form-group">     
+        <label for="username">User Name:</label>
+        <input input class="form-control" type="text" name="username" value='{{user_name}}' />           
+    </div>
+
     <div class="form-group">
-             <tr> 
-                <td><label for="username">User Name:</label></td>
-                <td><input type="text" name="username" value='{{user_name}}' />
-             </tr> 
+        <label for="password">Password:</label>
+        <input input class="form-control" type="password" name="password" />     
     </div>
     <div class="form-group">
-             <tr> 
-                <td><label for="password">Password:</label></td>
-                <td><input type="password" name="password" />
-             </tr> 
+        <label for="password_check">Verify password:</label>
+        <input input class="form-control" type="password" name="verify" />   
     </div>
-    <div class="form-group">
-             <tr> 
-                <td><label for="password_check">Verify password:</label></td>
-                <td><input type="password" name="verify" />
-             </tr> 
-    </div>
-    <div class="form-group">
-             <tr> 
-                <td><input type="submit" value="Register" /></td>
-             </tr> 
-    </div>
-         </table> 
+
+    <button type="submit" class="btn btn-default" value="Register">Register</button>
+
     </form>
 </div>
 {% endblock %}

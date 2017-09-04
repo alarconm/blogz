@@ -6,7 +6,9 @@
     <hr />
     {% endif %}
     <p>
-        <h3>{{ posts[0].owner.username }}</h3>
+        {% if posts|length != 0 %}
+        <h3>Posts by: {{ posts[0].owner.username }}</h3>
+        {% endif %}
         <hr />
         <ol>
         {% for post in posts %}
